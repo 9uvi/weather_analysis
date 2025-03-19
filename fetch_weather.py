@@ -1,5 +1,7 @@
 import os
 import requests
+import shutil
+import pathlib
 import pandas as pd
 from datetime import datetime
 from sqlalchemy import create_engine
@@ -7,6 +9,9 @@ from sqlalchemy import create_engine
 from dotenv import load_dotenv
 
 load_dotenv()
+
+CWD = pathlib.Path(__file__).parent.resolve()
+ARCHIVE_PATH = CWD / "archive"
 
 API_KEY = os.getenv("OWM_API_KEY")
 CITIES = [
@@ -29,6 +34,8 @@ def fetch_weather_data():
     df.to_csv("weather_data.csv", index=False)
     return df
 
+def archive(file_name):
+    os.rename(file_name, ARCHIVE_PATH / f"{file_name[:-4]}_{datetime.now().strftime('%d%m_%H%M')}.csv")
 
 if __name__ == "__main__":
     fetch_weather_data()
@@ -40,3 +47,6 @@ if __name__ == "__main__":
     # Load CSV data
     df = pd.read_csv("weather_data.csv")
     df.to_sql("weather", engine, if_exists="append", index=False)
+
+    # Archive .csv file
+    archive("weather_data.csv")
