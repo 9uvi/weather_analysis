@@ -35,7 +35,7 @@ if __name__ == "__main__":
 
     # Load data into Postgres
     # Connect to PostgreSQL
-    engine = create_engine(f"postgresql://data_user:{os.getenv("POSTGRESS_PASSWORD")}@localhost:5432/weather_db")
+    engine = create_engine(f"postgresql://data_user:{os.getenv('POSTGRESS_PASSWORD')}@localhost:5432/weather_db")
 
     # Load CSV data
     df = pd.read_csv("weather_data.csv")
