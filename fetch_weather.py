@@ -2,13 +2,16 @@ import os
 import requests
 import pandas as pd
 from datetime import datetime
+from sqlalchemy import create_engine
 
 from dotenv import load_dotenv
 
 load_dotenv()
 
 API_KEY = os.getenv("OWM_API_KEY")
-CITIES = ["Bucharest", "New York", "Tokyo", "Paris", "Berlin"]
+CITIES = [
+    "Tokyo", "Delhi", "Shanghai", "São Paulo", "Mexico City", "Bucharest",
+]
 
 def fetch_weather_data():
     data = []
@@ -26,5 +29,14 @@ def fetch_weather_data():
     df.to_csv("weather_data.csv", index=False)
     return df
 
+
 if __name__ == "__main__":
     fetch_weather_data()
+
+    # Load data into Postgres
+    # Connect to PostgreSQL
+    engine = create_engine(f"postgresql://data_user:{os.getenv("POSTGRESS_PASSWORD")}@localhost:5432/weather_db")
+
+    # Load CSV data
+    df = pd.read_csv("weather_data.csv")
+    df.to_sql("weather", engine, if_exists="append", index=False)
