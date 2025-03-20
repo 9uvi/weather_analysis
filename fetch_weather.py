@@ -12,9 +12,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+CWD = pathlib.Path(__file__).parent.resolve()
+
 # logging setup
 logging.basicConfig(
-    filename=f"/logs/fetch_data_{datetime.now().strftime('%d%m_%H%M')}.log",
+    filename=CWD / "logs" / f"fetch_data_{datetime.now().strftime('%d%m_%H%M')}.log",
     encoding="utf-8",
     filemode="a",
     format="%(asctime)s - %(levelname)s - %(message)s",
@@ -23,7 +25,6 @@ logging.basicConfig(
     level=logging.INFO,
 )
 
-CWD = pathlib.Path(__file__).parent.resolve()
 ARCHIVE_PATH = CWD / "archive"
 
 API_KEY = os.getenv("OWM_API_KEY")
